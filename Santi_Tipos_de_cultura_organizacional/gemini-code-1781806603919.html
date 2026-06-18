@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa Conceptual - Tipos de Cultura Organizacional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #172033;
+    --muted: #667184;
+    --paper: #f6f8fb;
+    --panel: #ffffff;
+    --line: #dce4ef;
+    --navy: #243b63;
+    --teal: #0f9f9a;
+    --coral: #e7684a;
+    --gold: #d99a25;
+    --violet: #7157b8;
+    --green: #3a9d63;
+    --shadow: 0 18px 45px rgba(26, 40, 68, 0.12);
+    --radius: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Outfit', sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .topbar {
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .topbar-inner {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--navy);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .btn-back svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .page-shell {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 40px 0 56px;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+    gap: 34px;
+    align-items: stretch;
+  }
+
+  .hero-copy,
+  .axis-card,
+  .concept-map,
+  .route-card,
+  .model-card,
+  .matrix-card,
+  .note-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel);
+    box-shadow: var(--shadow);
+  }
+
+  .hero-copy {
+    padding: 34px;
+  }
+
+  .kicker {
+    color: var(--teal);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin-top: 12px;
+    max-width: 760px;
+    font-size: clamp(2.2rem, 5vw, 4.3rem);
+    line-height: 0.98;
+    letter-spacing: 0;
+  }
+
+  .hero-copy p {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+
+  .axis-card {
+    padding: 26px;
+    background:
+      linear-gradient(135deg, rgba(36, 59, 99, 0.94), rgba(15, 159, 154, 0.78)),
+      url("../assets/tipos_cultura.png") center / cover no-repeat;
+    color: #fff;
+  }
+
+  .axis-card h2 {
+    font-size: 1.35rem;
+    line-height: 1.15;
+  }
+
+  .axis-grid {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .axis-grid span {
+    min-height: 94px;
+    display: grid;
+    place-items: center;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.12);
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .section-head {
+    margin: 46px 0 18px;
+  }
+
+  .section-head h2 {
+    margin-top: 8px;
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    line-height: 1.1;
+  }
+
+  .section-head p {
+    max-width: 780px;
+    margin-top: 10px;
+    color: var(--muted);
+  }
+
+  .concept-map {
+    padding: 28px;
+    overflow: hidden;
+  }
+
+  .map-grid {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 34px;
+    align-items: center;
+  }
+
+  .root-node {
+    position: relative;
+    padding: 26px;
+    border-radius: var(--radius);
+    background: var(--navy);
+    color: #fff;
+  }
+
+  .root-node::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -35px;
+    width: 35px;
+    height: 2px;
+    background: var(--line);
+  }
+
+  .root-node strong {
+    display: block;
+    font-size: 1.32rem;
+    line-height: 1.12;
+  }
+
+  .root-node span {
+    display: block;
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.9rem;
+  }
+
+  .branches {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .model-card {
+    min-height: 230px;
+    padding: 18px;
+    box-shadow: none;
+  }
+
+  .model-card b {
+    display: block;
+    color: var(--navy);
+    font-size: 1rem;
+    line-height: 1.18;
+  }
+
+  .model-card small {
+    display: block;
+    margin-top: 8px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .model-card ul {
+    margin-top: 14px;
+    list-style: none;
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+
+  .model-card li + li {
+    margin-top: 6px;
+  }
+
+  .model-card li::before {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background: var(--teal);
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .route-filter {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--panel);
+    color: var(--ink);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 9px 14px;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .route-filter.active,
+  .route-filter:hover {
+    border-color: var(--navy);
+    background: var(--navy);
+    color: #fff;
+  }
+
+  .routes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .route-card {
+    padding: 24px;
+    box-shadow: 0 12px 28px rgba(26, 40, 68, 0.08);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .route-card.dimmed {
+    opacity: 0.22;
+  }
+
+  .route-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .route-mark {
+    width: 12px;
+    height: 42px;
+    border-radius: 999px;
+    background: var(--teal);
+  }
+
+  .route-card[data-route="adhocracia"] .route-mark { background: var(--violet); }
+  .route-card[data-route="mercado"] .route-mark { background: var(--coral); }
+  .route-card[data-route="jerarquia"] .route-mark { background: var(--gold); }
+
+  .route-title h3 {
+    font-size: 1.28rem;
+    line-height: 1.08;
+  }
+
+  .route-title span {
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  .connector-line {
+    margin: 20px 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .concept-node {
+    min-height: 118px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fbfcfe;
+  }
+
+  .concept-node::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    width: 8px;
+    height: 2px;
+    background: var(--line);
+  }
+
+  .concept-node:last-child::after {
+    display: none;
+  }
+
+  .concept-node small {
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .concept-node b {
+    margin-top: 6px;
+    font-size: 0.92rem;
+    line-height: 1.18;
+  }
+
+  .route-card p {
+    color: var(--muted);
+    font-size: 0.94rem;
+  }
+
+  .matrix-card {
+    overflow: hidden;
+  }
+
+  .matrix-scroll {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    min-width: 980px;
+    border-collapse: collapse;
+    background: var(--panel);
+  }
+
+  th,
+  td {
+    padding: 16px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background: #edf2f8;
+    color: var(--navy);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  td {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  td:first-child {
+    color: var(--ink);
+    font-weight: 800;
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .note-card {
+    margin-top: 18px;
+    padding: 24px;
+    box-shadow: 0 12px 28px rgba(26, 40, 68, 0.06);
+  }
+
+  .note-card p {
+    color: var(--muted);
+  }
+
+  footer {
+    margin-top: 42px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    text-align: center;
+    font-size: 0.86rem;
+  }
+
+  @media (max-width: 1050px) {
+    .hero,
+    .map-grid,
+    .routes-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .root-node::after {
+      display: none;
+    }
+
+    .branches {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 720px) {
+    .topbar-inner {
+      display: grid;
+      padding: 12px 0;
+    }
+
+    .hero-copy,
+    .axis-card,
+    .concept-map {
+      padding: 22px;
+    }
+
+    .axis-grid,
+    .branches,
+    .connector-line {
+      grid-template-columns: 1fr;
+    }
+
+    .concept-node::after {
+      display: none;
+    }
+  }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="Navegación principal">
+  <div class="topbar-inner">
+    <a href="../index.html" class="btn-back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Volver al portafolio
+    </a>
+    <span class="kicker">Actividad 9</span>
+  </div>
+</nav>
+
+<main class="page-shell">
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="kicker">Mapa conceptual</span>
+      <h1>Tipos de cultura organizacional</h1>
+      <p>
+        La cultura organizacional se puede analizar desde varios modelos. Para que el mapa sea comprensible, el modelo de Cameron y Quinn funciona como eje integrador y los demás autores se conectan por equivalencias conceptuales.
+      </p>
+    </div>
+
+    <aside class="axis-card" aria-label="Ejes de Cameron y Quinn">
+      <h2>Ejes principales del Competing Values Framework</h2>
+      <div class="axis-grid">
+        <span>Flexibilidad y autonomía</span>
+        <span>Estabilidad y control</span>
+        <span>Orientación interna</span>
+        <span>Orientación externa</span>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section-head">
+    <span class="kicker">Estructura del mapa</span>
+    <h2>De la idea central a cinco marcos teóricos</h2>
+    <p>El mapa parte del concepto general y lo clasifica mediante autores. Cada autor usa criterios distintos: ejes de control, distribución del poder, ideologías, perfiles de carrera o características del entorno.</p>
+  </section>
+
+  <section class="concept-map" aria-label="Mapa conceptual de modelos">
+    <div class="map-grid">
+      <div class="root-node">
+        <strong>Cultura organizacional</strong>
+        <span>Conjunto de valores, creencias, prácticas y formas de decidir dentro de una empresa.</span>
+      </div>
+
+      <div class="branches">
+        <article class="model-card">
+          <b>Cameron &amp; Quinn</b>
+          <small>clasifica mediante ejes</small>
+          <ul>
+            <li>Clan</li>
+            <li>Adhocrática</li>
+            <li>Mercado</li>
+            <li>Jerárquica</li>
+          </ul>
+        </article>
+        <article class="model-card">
+          <b>Charles Handy</b>
+          <small>explica la distribución del poder</small>
+          <ul>
+            <li>Poder</li>
+            <li>Roles</li>
+            <li>Tareas</li>
+            <li>Personas</li>
+          </ul>
+        </article>
+        <article class="model-card">
+          <b>Harrison &amp; Stokes</b>
+          <small>diagnostica ideologías internas</small>
+          <ul>
+            <li>Poder</li>
+            <li>Normas</li>
+            <li>Resultados</li>
+            <li>Persona</li>
+          </ul>
+        </article>
+        <article class="model-card">
+          <b>Jeffrey Sonnenfeld</b>
+          <small>relaciona cultura y carrera</small>
+          <ul>
+            <li>Academia</li>
+            <li>Club</li>
+            <li>Equipo de béisbol</li>
+            <li>Fortaleza</li>
+          </ul>
+        </article>
+        <article class="model-card">
+          <b>Deal &amp; Kennedy</b>
+          <small>vincula cultura con entorno</small>
+          <ul>
+            <li>Macho duro</li>
+            <li>Trabajo duro/diversión</li>
+            <li>Apuesta por la compañía</li>
+            <li>Procesos</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-head">
+    <span class="kicker">Rutas de equivalencia</span>
+    <h2>Cuatro familias culturales para entender las conexiones</h2>
+    <p>Selecciona una familia para resaltar su ruta conceptual. Esta parte reemplaza la lectura confusa del mapa anterior y muestra qué nombres cambian según el autor, aunque la lógica organizacional sea parecida.</p>
+  </section>
+
+  <div class="controls" aria-label="Filtros del mapa">
+    <button class="route-filter active" data-filter="todas">Todas</button>
+    <button class="route-filter" data-filter="clan">Clan / colaboración</button>
+    <button class="route-filter" data-filter="adhocracia">Adhocracia / innovación</button>
+    <button class="route-filter" data-filter="mercado">Mercado / competencia</button>
+    <button class="route-filter" data-filter="jerarquia">Jerarquía / control</button>
+  </div>
+
+  <section class="routes-grid" aria-label="Rutas culturales comparativas">
+    <article class="route-card" data-route="clan">
+      <div class="route-title">
+        <span class="route-mark"></span>
+        <div>
+          <h3>Clan: colaboración interna</h3>
+          <span>Enfoque humano, pertenencia y cohesión</span>
+        </div>
+      </div>
+      <div class="connector-line">
+        <div class="concept-node"><small>Cameron &amp; Quinn</small><b>Cultura Clan</b></div>
+        <div class="concept-node"><small>Handy</small><b>Personas / Dionisos</b></div>
+        <div class="concept-node"><small>Harrison</small><b>Orientada a la persona</b></div>
+        <div class="concept-node"><small>Sonnenfeld</small><b>Cultura de Club</b></div>
+        <div class="concept-node"><small>Deal &amp; Kennedy</small><b>Trabajo duro y diversión</b></div>
+      </div>
+      <p>Promueve lealtad, mentoría, sentido de pertenencia y reconocimiento personal. Su riesgo aparece cuando el consenso vuelve lenta la toma de decisiones.</p>
+    </article>
+
+    <article class="route-card" data-route="adhocracia">
+      <div class="route-title">
+        <span class="route-mark"></span>
+        <div>
+          <h3>Adhocracia: innovación flexible</h3>
+          <span>Cambio, creatividad y autonomía</span>
+        </div>
+      </div>
+      <div class="connector-line">
+        <div class="concept-node"><small>Cameron &amp; Quinn</small><b>Cultura Adhocrática</b></div>
+        <div class="concept-node"><small>Handy</small><b>Tareas / Atenea</b></div>
+        <div class="concept-node"><small>Harrison</small><b>Orientada a resultados</b></div>
+        <div class="concept-node"><small>Sonnenfeld</small><b>Equipo de béisbol</b></div>
+        <div class="concept-node"><small>Deal &amp; Kennedy</small><b>Apuesta por la compañía</b></div>
+      </div>
+      <p>Favorece experimentación, aprendizaje por error, equipos autónomos y proyectos de alto impacto. Puede generar desorden si no existe coordinación.</p>
+    </article>
+
+    <article class="route-card" data-route="mercado">
+      <div class="route-title">
+        <span class="route-mark"></span>
+        <div>
+          <h3>Mercado: competencia externa</h3>
+          <span>Resultados, velocidad y metas medibles</span>
+        </div>
+      </div>
+      <div class="connector-line">
+        <div class="concept-node"><small>Cameron &amp; Quinn</small><b>Cultura de Mercado</b></div>
+        <div class="concept-node"><small>Handy</small><b>Poder / Zeus</b></div>
+        <div class="concept-node"><small>Harrison</small><b>Orientada al poder</b></div>
+        <div class="concept-node"><small>Sonnenfeld</small><b>Equipo de béisbol</b></div>
+        <div class="concept-node"><small>Deal &amp; Kennedy</small><b>Macho duro</b></div>
+      </div>
+      <p>Impulsa competitividad, indicadores de desempeño y decisiones basadas en datos. En exceso puede deteriorar el clima laboral y elevar el agotamiento.</p>
+    </article>
+
+    <article class="route-card" data-route="jerarquia">
+      <div class="route-title">
+        <span class="route-mark"></span>
+        <div>
+          <h3>Jerarquía: control y estabilidad</h3>
+          <span>Procesos, normas y previsibilidad</span>
+        </div>
+      </div>
+      <div class="connector-line">
+        <div class="concept-node"><small>Cameron &amp; Quinn</small><b>Cultura Jerárquica</b></div>
+        <div class="concept-node"><small>Handy</small><b>Roles / Apolo</b></div>
+        <div class="concept-node"><small>Harrison</small><b>Orientada a las normas</b></div>
+        <div class="concept-node"><small>Sonnenfeld</small><b>Cultura de Academia</b></div>
+        <div class="concept-node"><small>Deal &amp; Kennedy</small><b>Cultura de procesos</b></div>
+      </div>
+      <p>Asegura orden, calidad, documentación y reducción de errores. Es útil en entornos regulados, aunque puede volverse burocrática.</p>
+    </article>
+  </section>
+
+  <section class="section-head">
+    <span class="kicker">Matriz final</span>
+    <h2>Comparación rápida de los modelos</h2>
+    <p>Esta matriz conserva la información investigativa más importante y permite estudiar el tema sin perder la relación entre autores.</p>
+  </section>
+
+  <section class="matrix-card" aria-label="Matriz de equivalencias">
+    <div class="matrix-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Familia cultural</th>
+            <th>Criterio dominante</th>
+            <th>Liderazgo típico</th>
+            <th>Fortalezas</th>
+            <th>Riesgos</th>
+            <th>Ejemplos de referencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Clan / colaboración</td>
+            <td>Orientación interna y flexibilidad</td>
+            <td>Mentor, facilitador y cohesionador</td>
+            <td>Pertenencia, compromiso, comunicación y bienestar</td>
+            <td>Evitar conflictos necesarios o decisiones lentas</td>
+            <td>Zappos, Hilton, Marriott</td>
+          </tr>
+          <tr>
+            <td>Adhocracia / innovación</td>
+            <td>Flexibilidad y orientación externa</td>
+            <td>Visionario, inspirador y promotor de autonomía</td>
+            <td>Creatividad, adaptación, aprendizaje y cambio</td>
+            <td>Inestabilidad, dispersión o agotamiento</td>
+            <td>Spotify, Google, Netflix, NASA</td>
+          </tr>
+          <tr>
+            <td>Mercado / competencia</td>
+            <td>Orientación externa y control de resultados</td>
+            <td>Directivo, competitivo y enfocado en KPIs</td>
+            <td>Eficiencia, metas claras y alto rendimiento</td>
+            <td>Burnout, presión excesiva y clima fragmentado</td>
+            <td>Amazon, Walmart, banca de inversión</td>
+          </tr>
+          <tr>
+            <td>Jerarquía / control</td>
+            <td>Orientación interna y estabilidad</td>
+            <td>Organizador, coordinador y garante de procesos</td>
+            <td>Predictibilidad, calidad, seguridad y consistencia</td>
+            <td>Burocracia, rigidez y resistencia al cambio</td>
+            <td>Aerolíneas, hospitales, instituciones públicas</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <aside class="note-card">
+    <p><strong>Conclusión:</strong> ningún tipo de cultura es superior por sí mismo. La cultura más adecuada depende de la estrategia, del entorno y del tipo de trabajo. Una organización saludable puede combinar subculturas, siempre que exista coherencia entre sus valores declarados y sus prácticas reales.</p>
+  </aside>
+
+  <footer>
+    Basado en la investigación recopilada para la Actividad 9: Cameron &amp; Quinn, Charles Handy, Harrison &amp; Stokes, Jeffrey Sonnenfeld, Deal &amp; Kennedy.
+  </footer>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const buttons = document.querySelectorAll(".route-filter");
+  const cards = document.querySelectorAll(".route-card");
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const filter = button.dataset.filter;
+      buttons.forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
+
+      cards.forEach((card) => {
+        const visible = filter === "todas" || card.dataset.route === filter;
+        card.classList.toggle("dimmed", !visible);
+      });
+    });
+  });
+});
+</script>
+</body>
+</html>
